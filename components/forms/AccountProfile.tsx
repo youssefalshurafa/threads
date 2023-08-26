@@ -38,6 +38,8 @@ const AccountProfile = ({ user, btnTitle }: Props) => {
   const [files, setFiles] = useState<File[]>([]);
   const { startUpload } = useUploadThing('media');
 
+  const [isLoading, setIsLoading] = useState(false);
+
   const router = useRouter();
   const pathname = usePathname();
 
@@ -75,6 +77,7 @@ const AccountProfile = ({ user, btnTitle }: Props) => {
   };
 
   const onSubmit = async (values: z.infer<typeof UserValidation>) => {
+    setIsLoading(true);
     const blob = values.profile_photo;
 
     const hasImageChanged = isBase64Image(blob);
@@ -99,6 +102,7 @@ const AccountProfile = ({ user, btnTitle }: Props) => {
     if (pathname === '/profile/edit') {
       router.back();
     } else {
+      setIsLoading(false);
       router.push('/');
     }
   };
@@ -143,6 +147,7 @@ const AccountProfile = ({ user, btnTitle }: Props) => {
                   onChange={(e) => handleImage(e, field.onChange)}
                 />
               </FormControl>
+              <FormMessage />
             </FormItem>
           )}
         />
@@ -162,6 +167,7 @@ const AccountProfile = ({ user, btnTitle }: Props) => {
                   {...field}
                 />
               </FormControl>
+              <FormMessage />
             </FormItem>
           )}
         />
@@ -180,6 +186,7 @@ const AccountProfile = ({ user, btnTitle }: Props) => {
                   {...field}
                 />
               </FormControl>
+              <FormMessage />
             </FormItem>
           )}
         />
@@ -198,11 +205,12 @@ const AccountProfile = ({ user, btnTitle }: Props) => {
                   {...field}
                 />
               </FormControl>
+              <FormMessage />
             </FormItem>
           )}
         />
         <Button type="submit" className="bg-primary-500">
-          Submit
+          {isLoading ? 'Loading...' : 'Submit'}
         </Button>
       </form>
     </Form>
